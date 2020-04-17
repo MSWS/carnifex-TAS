@@ -1,0 +1,27 @@
+"Phrases"
+{
+  "InvalidStyle"
+  {
+    "en"    "You can't use TAS mode on this style!"
+  }
+  "PauseStartZone"
+  {
+    "en"    "You can't pause inside the start zone!"
+  }
+  "CheckpointAlert"
+  {
+    "en"    "You can't use checkpoints in TAS mode!"
+  }
+  "HoldDuck"
+  {
+    "en"   "Hold down your duck button and then unpause."
+  }
+  "ReleaseDuck"
+  {
+    "en"   "Release your duck button and then unpause."
+  }
+  "Here"
+  {
+    "en"   "Yay, your code reached this line"
+  }
+}
