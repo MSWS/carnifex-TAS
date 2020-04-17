@@ -4,6 +4,8 @@ A Tool Assisted Speedrun Tool for Shavit's bhoptimer.
 
 This plugin is loosely based on blacky's TAS, but is completely reworked to work with bhoptimer 2.5, also includes some new features/changes.
 
+CAUTION: Long TAS runs will use a fair share of RAM.
+
 ## Features
 
 * Pausing
