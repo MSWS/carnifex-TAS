@@ -12,6 +12,7 @@
 #include <smlib/arrays>
 #pragma dynamic 2621440
 
+
 #pragma semicolon 1
 
 MoveType  g_pauseMoveType = MOVETYPE_NONE;
@@ -34,6 +35,7 @@ float g_fLastYaw[MAXPLAYERS + 1];
 float g_fLastMove[MAXPLAYERS + 1][2];
 float g_flSidespeed = 450.0;
 int g_nIgnoredCmds[MAXPLAYERS + 1];
+float g_flLastGain[MAXPLAYERS + 1];
 
 //fix replay data
 ArrayList gA_SaveFrames[MAXPLAYERS+1];
@@ -108,7 +110,7 @@ public float NormalizeAngle(float angle)
 } 
 
 
-//taken from unknowncheats forum. 
+//taken from unknowncheats forum. unknowncheats.me/forum/counterstrike-global-offensive/257614-proper-autobhop-100-gain-strafer.html
 void ApplyAutoStrafe(int client, int &buttons, float vel[3], float angles[3])
 {
 	if (GetEntityFlags(client) & FL_ONGROUND || GetEntityMoveType(client) & MOVETYPE_LADDER)
@@ -121,14 +123,24 @@ void ApplyAutoStrafe(int client, int &buttons, float vel[3], float angles[3])
 	
 	float flVelocity[3];
 	GetEntPropVector(client, Prop_Data, "m_vecVelocity", flVelocity);
-	float yVel = RadToDeg(ArcTangent2(flVelocity[1], flVelocity[0]));
-	float diff_ang = NormalizeAngle(angles[1] - yVel);
+	
+	float YVel = RadToDeg(ArcTangent2(flVelocity[1], flVelocity[0]));
+	
+	float diff_angle = NormalizeAngle(angles[1] - YVel);
 	
 	vel[1] = g_flSidespeed;
-	if (diff_ang > 0.0)
-	vel[1] = -g_flSidespeed;
 	
-	angles[1] = NormalizeAngle(angles[1] - diff_ang);
+	if (diff_angle > 0.0)
+		vel[1] = -g_flSidespeed;
+	
+	float flLastGain = g_flLastGain[client];
+	float flAngleGain = RadToDeg(ArcTangent(vel[1] / vel[0]));
+	
+	
+	if (!((flLastGain < 0.0 && flAngleGain < 0.0) || (flLastGain > 0.0 && flAngleGain > 0.0))) 
+		angles[1] -= diff_angle;
+	
+	g_flLastGain[client] = flAngleGain;
 }
 
 
@@ -713,13 +725,17 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				
 				//we need to throttle this because csgo can't handle laggedMovementValue very well..
 				if(g_bAutoStrafer[client]) {
-					int ignore_amount = RoundFloat(1.0/g_fTimescale[client]);
 					
-					if ( ++g_nIgnoredCmds[client] < ignore_amount )
-					{
+					if(g_fTimescale[client] != 1.0) {
+						int ignore_amount = RoundFloat(1.0/g_fTimescale[client]);
 						
-						return Plugin_Continue;
+						if ( ++g_nIgnoredCmds[client] < ignore_amount )
+						{
+							
+							return Plugin_Continue;
+						}
 					}
+					
 					ApplyAutoStrafe(client, buttons, vel, angles);
 					g_nIgnoredCmds[client] = 0;
 				}
