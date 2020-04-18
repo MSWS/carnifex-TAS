@@ -131,19 +131,18 @@ void ApplyAutoStrafe(int client, int &buttons, float vel[3], float angles[3])
 	vel[1] = g_flSidespeed;
 	
 	if (diff_angle > 0.0)
-		vel[1] = -g_flSidespeed;
+	vel[1] = -g_flSidespeed;
 	
 	float flLastGain = g_flLastGain[client];
 	float flAngleGain = RadToDeg(ArcTangent(vel[1] / vel[0]));
 	
 	
 	if (!((flLastGain < 0.0 && flAngleGain < 0.0) || (flLastGain > 0.0 && flAngleGain > 0.0))) 
-		angles[1] -= diff_angle;
+	angles[1] -= diff_angle;
 	
-	g_flLastGain[client] = flAngleGain;
+	g_flLastGain[client] = flAngleGain; 
+	
 }
-
-
 
 
 public Action Command_FastForward(int client, int args)
@@ -172,7 +171,6 @@ public Action Command_FastForward(int client, int args)
 
 public void Shavit_OnStyleChanged(int client, int oldstyle, int newstyle, int track, bool manual) 
 {
-	PrintToServer("STYLECHANGED ID: %i", client);
 	if(g_bUsedFrame[client] == false)
 	{
 		g_hFrameList[client] = CreateArray(FRAMESIZE);
@@ -199,7 +197,6 @@ public Action Command_OpenTAS(int client, int args){
 void OpenTASMenu(int client) {
 	Menu menu = new Menu(Menu_TAS);
 	menu.SetTitle("TAS menu");
-	PrintToServer("MENU ID: %i", client);
 	if(g_bTASMode[client])
 	{
 		char sDisplay[32];
@@ -227,88 +224,88 @@ void OpenTASMenu(int client) {
 
 public int Menu_TAS(Menu menu, MenuAction action, int client, int param2)
 {
-	if(!g_bTASMode[client]) {
-		return 0;
-	} 
-	
 	
 	if(action == MenuAction_Select)
 	{
-		char sInfo[32];
-		menu.GetItem(param2, sInfo, sizeof(sInfo));
-		
-		if(StrEqual(sInfo, "pr"))
-		{		
-			PauseTAS(client);
-			OpenTASMenu(client);
-		}
-		else if(StrEqual(sInfo, "rw"))
-		{
-			if(!g_bPaused[client]) {
+		if(g_bTASMode[client]) {
+			
+			
+			char sInfo[32];
+			menu.GetItem(param2, sInfo, sizeof(sInfo));
+			
+			if(StrEqual(sInfo, "pr"))
+			{		
 				PauseTAS(client);
+				OpenTASMenu(client);
 			}
-			g_bRewind[client] = !g_bRewind[client];
-			
-			if(g_bRewind[client])
+			else if(StrEqual(sInfo, "rw"))
 			{
-				g_bFastForward[client] = false;
+				if(!g_bPaused[client]) {
+					PauseTAS(client);
+				}
+				g_bRewind[client] = !g_bRewind[client];
+				
+				if(g_bRewind[client])
+				{
+					g_bFastForward[client] = false;
+				}
+				OpenTASMenu(client);
 			}
-			OpenTASMenu(client);
-		}
-		else if(StrEqual(sInfo, "ff"))
-		{
-			if(!g_bPaused[client]) {
-				PauseTAS(client);
-			}
-			g_bFastForward[client] = !g_bFastForward[client];
-			
-			if(g_bFastForward[client])
+			else if(StrEqual(sInfo, "ff"))
 			{
-				g_bRewind[client] = false;
+				if(!g_bPaused[client]) {
+					PauseTAS(client);
+				}
+				g_bFastForward[client] = !g_bFastForward[client];
+				
+				if(g_bFastForward[client])
+				{
+					g_bRewind[client] = false;
+				}
+				
+				OpenTASMenu(client);
 			}
-			
-			OpenTASMenu(client);
-		}
-		else if(StrEqual(sInfo, "editspeed"))
-		{
-			g_fEditSpeed[client] *= 2;
-			
-			if(g_fEditSpeed[client] > 128)
+			else if(StrEqual(sInfo, "editspeed"))
 			{
-				g_fEditSpeed[client] = 0.25;
+				g_fEditSpeed[client] *= 2;
+				
+				if(g_fEditSpeed[client] > 128)
+				{
+					g_fEditSpeed[client] = 0.25;
+				}
+				OpenTASMenu(client);
 			}
-			OpenTASMenu(client);
-		}
-		else if (StrEqual(sInfo, "as"))
-		{
-			ToggleAutoStrafer(client);
-			OpenTASMenu(client);
-		}
-		else if(StrEqual(sInfo, "ts"))
-		{
-			g_fTimescale[client] += 0.1;
-			if(g_fTimescale[client] > 1.05)
+			else if (StrEqual(sInfo, "as"))
 			{
-				g_fTimescale[client] = 0.2;
+				ToggleAutoStrafer(client);
+				OpenTASMenu(client);
+			}
+			else if(StrEqual(sInfo, "ts"))
+			{
+				g_fTimescale[client] += 0.1;
+				if(g_fTimescale[client] > 1.05)
+				{
+					g_fTimescale[client] = 0.2;
+				}
+				
+				setTimescale(client, g_fTimescale[client]);
+				
+				OpenTASMenu(client); 
 			}
 			
-			setTimescale(client, g_fTimescale[client]);
 			
-			OpenTASMenu(client); 
-		}
-		
-		
-		else if(StrEqual(sInfo, "enter"))
-		{
-			char sSpecial[128];
-			int style = Shavit_GetBhopStyle(client);
-			Shavit_GetStyleStrings(style, sSpecialString, sSpecial, 128);
+			else if(StrEqual(sInfo, "enter"))
+			{
+				char sSpecial[128];
+				int style = Shavit_GetBhopStyle(client);
+				Shavit_GetStyleStrings(style, sSpecialString, sSpecial, 128);
+				
+			}
 			
-		}
-		
-		else if(StrEqual(sInfo, "exit"))
-		{
-			OpenExitTASPrompt(client);
+			else if(StrEqual(sInfo, "exit"))
+			{
+				OpenExitTASPrompt(client);
+			}
 		}
 	}
 	
@@ -448,7 +445,7 @@ void PauseTAS(int client)
 	{
 		if(g_bPaused[client])
 		{	
-		
+			
 			
 			if(RoundToFloor(g_CurrentFrame[client]) >= GetArraySize(g_hFrameList[client])) return;
 			
@@ -515,7 +512,7 @@ void PauseTAS(int client)
 			SetEntityMoveType(client, MOVETYPE_NONE);
 			Shavit_PauseTimer(client);
 			g_bPaused[client] = true;
-
+			
 		}
 	} else 
 	{
