@@ -20,7 +20,7 @@ CAUTION: Long TAS runs will use a fair share of RAM.
 * !tasmenu - Opens the TAS menu for the player if the style allows for TAS.
 
 ## Requirements
-Latest bhoptimer version, compiled with [this](https://github.com/shavitush/bhoptimer/pull/893/commits/35b608af888067d570d26ecc246cf0f6821c8a01) patch for shavit-core.smx
+Latest version of bhoptimer from the [very_good_yes](https://github.com/shavitush/bhoptimer/tree/very_good_yes) branch.
 
 ## Installation
 
