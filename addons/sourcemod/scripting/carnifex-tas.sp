@@ -1,7 +1,7 @@
 #define PLUGIN_NAME           "Carnifex - TAS"	
 #define PLUGIN_AUTHOR         "carnifex"	
 #define PLUGIN_DESCRIPTION    "Tool Assisted Speedrun plugin for shavit's bhoptimer"	
-#define PLUGIN_VERSION        "1.2"	
+#define PLUGIN_VERSION        "1.3"	
 #define PLUGIN_URL            ""	
 
 #include <sourcemod>	
