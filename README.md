@@ -18,6 +18,7 @@ CAUTION: Long TAS runs will use a fair share of RAM.
 
 ## Usage
 * !tasmenu - Opens the TAS menu for the player if the style allows for TAS.
+* !tasreplay - Opens the TAS replay menu for individual TAS replays. 
 
 ## Requirements
 Latest version of bhoptimer from the [very_good_yes](https://github.com/shavitush/bhoptimer/tree/very_good_yes) branch.
