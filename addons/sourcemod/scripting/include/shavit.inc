@@ -1496,6 +1496,17 @@ native void Shavit_SetReplayData(int client, ArrayList data);
 native ArrayList Shavit_GetReplayData(int client);
 
 /**
+ * Start the replay bot
+ * Data needs to be loaded
+ *
+ * @param client					Client index.
+ * @param style						Bhop style.
+ * @param track						Timer track.
+ * @noreturn							
+ */
+native void Shavit_StartReplay(int client, int style, int track);
+
+/**
  * Reloads a specific replay into the replay bot cache.
  * Note: Not guaranteed to work with legacy replay bots.
  *
@@ -1842,6 +1853,7 @@ public void __pl_shavit_SetNTVOptional()
 	MarkNativeAsOptional("Shavit_PrintToChat");
 	MarkNativeAsOptional("Shavit_Rankings_DeleteMap");
 	MarkNativeAsOptional("Shavit_ReloadLeaderboards");
+	MarkNativeAsOptional("Shavit_StartReplay");
 	MarkNativeAsOptional("Shavit_ReloadReplay");
 	MarkNativeAsOptional("Shavit_ReloadReplays");
 	MarkNativeAsOptional("Shavit_Replay_DeleteMap");

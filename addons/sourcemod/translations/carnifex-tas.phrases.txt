@@ -12,16 +12,26 @@
   {
     "en"    "You can't use checkpoints in TAS mode!"
   }
-  "HoldDuck"
+
+  "WRMapNoRecords"
   {
-    "en"   "Hold down your duck button and then unpause."
-  }
-  "ReleaseDuck"
+    "en"    "There are no records for this map."
+  }  
+  "TASJumps"
   {
-    "en"   "Release your duck button and then unpause."
-  }
-  "Here"
+    "en"    "Jumps"
+  }  
+  "TASNewPB"
   {
-    "en"   "Yay, your code reached this line"
+    "en"    "You improved your TAS time. Type !tasreplay to review your run."
   }
+  "TASBotOccupied"
+  {
+	"en"	"The replay bot is currently occupied. Try again later"
+  }
+  "TASPerPlayerDisabled"
+  {
+	"en"	"Per-Player replays are disabled on this server."
+  }
+
 }
