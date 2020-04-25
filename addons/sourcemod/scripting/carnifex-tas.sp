@@ -73,7 +73,7 @@ public void OnPluginStart()
 {	
 	g_bPerPlayerReplay = CreateConVar("per-player-replay", "1", "Enable viewing and saving of all players personal best?", _, true, 0.0, true, 1.0);
 	AutoExecConfig();
-
+	
 	RegConsoleCmd("sm_tasmenu", Command_OpenTAS, "Open the TAS menu.");	
 	RegConsoleCmd("sm_tasreplay", Command_OpenTASReplay, "Open the TAS replay menu.");
 	RegConsoleCmd("+rewind", Command_Rewind);	
@@ -161,7 +161,7 @@ void ApplyAutoStrafe(int client, int &buttons, float vel[3], float angles[3])
 	if (!((flLastGain < 0.0 && flAngleGain < 0.0) || (flLastGain > 0.0 && flAngleGain > 0.0))) 	
 	angles[1] -= diff_angle;	
 	
-	g_flLastGain[client] = flAngleGain; 	
+	g_flLastGain[client] = flAngleGain;
 	
 }	
 
@@ -271,62 +271,62 @@ bool SaveReplay(int style, int track, float time, int steamid, int preframes, Ar
 {
 	char sTrack[4];
 	FormatEx(sTrack, 4, "_%d", track);
-
+	
 	
 	int clientID = GetSteamAccountID(client, false);
 	
 	char mapName[160];
 	GetCurrentMap(mapName, 160);
-
+	
 	char fileName[160];
 	FormatEx(fileName, 160, "%d%s%s", clientID, "_TAS_", mapName);
 	
 	char sPath[PLATFORM_MAX_PATH];
 	FormatEx(sPath, PLATFORM_MAX_PATH, "%s/%d/%s%s.replay", g_sReplayFolder, style, fileName, (track > 0)? sTrack:"");
-
+	
 	if(FileExists(sPath))
 	{
 		DeleteFile(sPath);
 	}
-
+	
 	File fFile = OpenFile(sPath, "wb");
 	fFile.WriteLine("%d:" ... REPLAY_FORMAT_FINAL, REPLAY_FORMAT_SUBVERSION);
-
+	
 	fFile.WriteString(map, true);
 	fFile.WriteInt8(style);
 	fFile.WriteInt8(track);
 	fFile.WriteInt32(preframes);
-
+	
 	int iSize = playerrecording.Length;
 	fFile.WriteInt32(iSize);
 	fFile.WriteInt32(view_as<int>(time));
 	fFile.WriteInt32(steamid);
-
+	
 	any aFrameData[CELLS_PER_FRAME];
 	any aWriteData[CELLS_PER_FRAME * FRAMES_PER_WRITE];
 	int iFramesWritten = 0;
-
+	
 	
 	for(int i = 0; i < iSize; i++)
 	{
 		playerrecording.GetArray(i, aFrameData, CELLS_PER_FRAME);
 		
-
+		
 		for(int j = 0; j < CELLS_PER_FRAME; j++)
 		{
 			aWriteData[(CELLS_PER_FRAME * iFramesWritten) + j] = aFrameData[j];
 		}
-
+		
 		if(++iFramesWritten == FRAMES_PER_WRITE || i == iSize - 1)
 		{
 			fFile.Write(aWriteData, CELLS_PER_FRAME * iFramesWritten, 4);
-
+			
 			iFramesWritten = 0;
 		}
 	}
-
+	
 	delete fFile;
-
+	
 	return true;
 }
 
@@ -334,21 +334,21 @@ bool LoadStyling()
 {
 	char sPath[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sPath, PLATFORM_MAX_PATH, "configs/shavit-replay.cfg");
-
+	
 	KeyValues kv = new KeyValues("shavit-replay");
 	
 	if(!kv.ImportFromFile(sPath))
 	{
 		delete kv;
-
+		
 		return false;
 	}
-
+	
 	char sFolder[PLATFORM_MAX_PATH];
 	kv.GetString("replayfolder", sFolder, PLATFORM_MAX_PATH, "{SM}/data/replaybot");
-
+	
 	delete kv;
-
+	
 	if(StrContains(sFolder, "{SM}") != -1)
 	{
 		ReplaceString(sFolder, PLATFORM_MAX_PATH, "{SM}/", "");
@@ -356,7 +356,7 @@ bool LoadStyling()
 	}
 	
 	strcopy(g_sReplayFolder, PLATFORM_MAX_PATH, sFolder);
-
+	
 	return true;
 }
 
@@ -364,7 +364,6 @@ bool LoadStyling()
 bool CheckReplayExistence(int clientID, int track) {
 	char sTrack[4];
 	FormatEx(sTrack, 4, "_%d", track);
-
 	
 	char mapName[160];
 	GetCurrentMap(mapName, 160);
@@ -374,7 +373,7 @@ bool CheckReplayExistence(int clientID, int track) {
 	
 	char sPath[PLATFORM_MAX_PATH];
 	FormatEx(sPath, PLATFORM_MAX_PATH, "%s/%d/%s%s.replay", g_sReplayFolder, GetTasStyle(), fileName, (track > 0)? sTrack:"");
-
+	
 	if(FileExists(sPath))
 	{
 		return true;
@@ -388,20 +387,20 @@ public int Menu_TASReplay(Menu menu, MenuAction action, int client, int param2)
 	
 	if(action == MenuAction_Select)	
 	{	
-			char sInfo[32];	
-			menu.GetItem(param2, sInfo, sizeof(sInfo));	
-			
-			if(StrEqual(sInfo, "main"))	
-			{			
-				g_iPlayerTrack[client] = 0;
-				OpenTASReplaySubMenu(client, 0);
-			}
-			
-			else if (StrEqual(sInfo, "bonus")) 
-			{
-				g_iPlayerTrack[client] = 1;
-				OpenTASReplaySubMenu(client, 1);	
-			}
+		char sInfo[32];	
+		menu.GetItem(param2, sInfo, sizeof(sInfo));	
+		
+		if(StrEqual(sInfo, "main"))	
+		{			
+			g_iPlayerTrack[client] = 0;
+			OpenTASReplaySubMenu(client, 0);
+		}
+		
+		else if (StrEqual(sInfo, "bonus")) 
+		{
+			g_iPlayerTrack[client] = 1;
+			OpenTASReplaySubMenu(client, 1);	
+		}
 	}	
 	
 	if(action & MenuAction_End)	
@@ -423,7 +422,7 @@ public int GetTasStyle() {
 		{	
 			return i;
 		}
-
+		
 	}
 	return -1;
 }
@@ -438,11 +437,11 @@ void StartReplaySubMenu(int client, int track)
 	GetCurrentMap(map, 160);
 	
 	dp.WriteString(map);
-
 	
-
+	
+	
 	char sQuery[512];
-	FormatEx(sQuery, 512, "SELECT p.id, u.name, p.time, p.jumps, p.auth FROM %splayertimes p JOIN %susers u ON p.auth = u.auth WHERE map = '%s' AND style = %d AND track = %d ORDER BY time ASC, date ASC;", g_sMySQLPrefix, g_sMySQLPrefix, map, GetTasStyle(), track);
+	FormatEx(sQuery, 512, "SELECT p.id, u.name, p.time, p.jumps, p.auth FROM %splayertimes p JOIN %susers u ON p.auth = u.auth WHERE map = '%s' AND style = %d AND track = %d ORDER BY time ASC, date ASC LIMIT 50;", g_sMySQLPrefix, g_sMySQLPrefix, map, GetTasStyle(), track);
 	g_hSQL.Query(SQL_WR_Callback, sQuery, dp);
 }
 
@@ -451,31 +450,31 @@ public void SQL_WR_Callback(Database db, DBResultSet results, const char[] error
 	data.Reset();
 	int serial = data.ReadCell();
 	int track = data.ReadCell();
-
+	
 	char sMap[192];
 	data.ReadString(sMap, 192);
-
+	
 	delete data;
-
+	
 	if(results == null)
 	{
 		LogError("Timer (WR SELECT) SQL query failed. Reason: %s", error);
-
+		
 		return;
 	}
-
+	
 	int client = GetClientFromSerial(serial);
-
+	
 	if(client == 0)
 	{
 		return;
 	}
-
-
+	
+	
 	Menu hMenu = new Menu(Menu_TASReplay_Sub);
-
+	
 	int iCount = 0;
-
+	
 	while(results.FetchRow())
 	{
 		
@@ -486,43 +485,43 @@ public void SQL_WR_Callback(Database db, DBResultSet results, const char[] error
 			char sID[8];
 			IntToString(iCount, sID, 8);
 			
-
+			
 			// 1 - player name
 			char sName[MAX_NAME_LENGTH];
 			results.FetchString(1, sName, MAX_NAME_LENGTH);
-
+			
 			// 2 - time
 			float time = results.FetchFloat(2);
 			char sTime[16];
 			FormatSeconds(time, sTime, 16);
-
+			
 			// 3 - jumps
 			int jumps = results.FetchInt(3);
 			
 			int playerAuth = results.FetchInt(4);
-
+			
 			char sDisplay[128];
 			FormatEx(sDisplay, 128, "#%d - %s - %s (%d %T)", iCount, sName, sTime, jumps, "TASJumps", client);
 			g_iIDforRecord[iCount] = playerAuth;
 			hMenu.AddItem(sID, sDisplay, CheckReplayExistence(playerAuth, track)?ITEMDRAW_DEFAULT:ITEMDRAW_DISABLED);
-			}
+		}
 	}
-
+	
 	if(hMenu.ItemCount == 0)
 	{
 		hMenu.SetTitle("TAS Replay");
 		char sNoRecords[64];
 		FormatEx(sNoRecords, 64, "%T", "WRMapNoRecords", client);
-
+		
 		hMenu.AddItem("-1", sNoRecords);
 	}
-
+	
 	else
 	{
-
+		
 		hMenu.SetTitle("TAS Replay");
 	}
-
+	
 	hMenu.ExitBackButton = true;
 	hMenu.Display(client, 20);
 }
@@ -536,20 +535,20 @@ void OpenTASReplaySubMenu(int client, int track)
 	GetClientName(client, name, false);
 	StartReplaySubMenu(client, track);
 }
-	
+
 public int Menu_TASReplay_Sub(Menu menu, MenuAction action, int client, int param2)	
 {	
 	
 	if(action == MenuAction_Select)	
 	{	
-			char sInfo[16];	
-			menu.GetItem(param2, sInfo, sizeof(sInfo));	
-			int ID = StringToInt(sInfo);
-			
-			if(CheckReplayExistence(g_iIDforRecord[ID], g_iPlayerTrack[client])) {
-				StartReplay(client, g_iIDforRecord[ID], g_iPlayerTrack[client]);
-			}
-
+		char sInfo[16];	
+		menu.GetItem(param2, sInfo, sizeof(sInfo));	
+		int ID = StringToInt(sInfo);
+		
+		if(CheckReplayExistence(g_iIDforRecord[ID], g_iPlayerTrack[client])) {
+			StartReplay(client, g_iIDforRecord[ID], g_iPlayerTrack[client]);
+		}
+		
 	}	
 	if(action & MenuAction_Cancel && param2 == MenuCancel_ExitBack)
 	{
@@ -567,7 +566,7 @@ void StartReplay(int client, int clientID, int track)
 {
 	char sTrack[4];
 	FormatEx(sTrack, 4, "_%d", track);
-
+	
 	char mapName[160];
 	GetCurrentMap(mapName, 160);
 	
@@ -587,7 +586,6 @@ void StartReplay(int client, int clientID, int track)
 		Shavit_StartReplay(client, GetTasStyle(), track);
 		
 		ChangeClientTeam(client, CS_TEAM_SPECTATOR);
-		
 	} else {
 		Shavit_PrintToChat(client, "%t", "TASBotOccupied", client);	
 	}
@@ -800,7 +798,8 @@ public void Shavit_OnLeaveZone(int client, int type, int track, int id, int enti
 {	
 	if(type == Zone_Start)	
 	{	
-		if(!g_bResetOnStart[client]) {
+		if(!g_bResetOnStart[client]) 
+		{
 			g_hFrameList[client].Clear();
 			gA_SaveFrames[client].Clear();	
 		}
@@ -820,13 +819,13 @@ public void Shavit_OnFinish(int client, int style, float time, int jumps, int st
 	
 	if(Shavit_GetBhopStyle(client) == GetTasStyle()) {
 		if((g_bPerPlayerReplay.FloatValue == 1.0) && (Shavit_GetClientPB(client, style, track) == time)) {
-		SaveReplay(style, track, time, GetSteamAccountID(client, false), 0, gA_SaveFrames[client], map, client);
-		
-		if(g_bPerPlayerReplay.BoolValue) {
-			Shavit_PrintToChat(client, "%t", "TASNewPB", client);
-		}
-		
-	} 
+			SaveReplay(style, track, time, GetSteamAccountID(client, false), 0, gA_SaveFrames[client], map, client);
+			
+			if(g_bPerPlayerReplay.BoolValue) {
+				Shavit_PrintToChat(client, "%t", "TASNewPB", client);
+			}
+			
+		} 
 	}
 	
 	g_hFrameList[client].Clear();	
@@ -886,7 +885,7 @@ void PauseTAS(int client)
 			
 			int size = GetArraySize(g_hFrameList[client]);	
 			any data1[FRAMESIZE];	
-			for(int i = 0; i < size-2; i++) {	
+			for(int i = 0; i < size; i++) {	
 				GetArrayArray(g_hFrameList[client], i, data1, sizeof(data));	
 				if(view_as<float>(data1[9]) > view_as<float>(data[9]))	
 				{	
@@ -898,7 +897,6 @@ void PauseTAS(int client)
 			}	
 			
 			Shavit_SetReplayData(client, gA_SaveFrames[client]);	
-			
 		}	
 		
 		else	
@@ -914,7 +912,7 @@ void PauseTAS(int client)
 		}	
 	} else 	
 	{	
-		Shavit_PrintToChat(client, "%t", "PauseStartZone", client);	
+		Shavit_PrintToChat(client, "%t", "PauseStartZone", client);
 	}	
 	
 }	
