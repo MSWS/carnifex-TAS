@@ -804,7 +804,7 @@ public void Shavit_OnLeaveZone(int client, int type, int track, int id, int enti
 			gA_SaveFrames[client].Clear();	
 		}
 		
-		Shavit_SetPlayerPreFrame(client, 0);
+		//Shavit_SetPlayerPreFrame(client, 0);
 		g_fSpeedTicksPassed[client] = 0.0;
 	}	
 }	
