@@ -206,13 +206,13 @@ public void Shavit_OnStyleChanged(int client, int oldstyle, int newstyle, int tr
 	}	
 	
 	g_CurrentFrame[client]       = 0.0;	
-	doStyleCheck(client, newstyle, oldstyle);	
+	doStyleCheck(client, newstyle, oldstyle, false);	
 	
 }	
 
 public Action Command_OpenTAS(int client, int args){	
 	int style = Shavit_GetBhopStyle(client);	
-	doStyleCheck(client, style, style);	
+	doStyleCheck(client, style, style, false);	
 	if(!g_bTASMode[client]) {
 		Shavit_PrintToChat(client, "%t", "InvalidStyle", client);	
 	}
@@ -980,6 +980,8 @@ void ExitTASMode(int client)
 		Shavit_StopTimer(client, false);	
 	}	
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);	
+	
+	
 	g_hFrameList[client].Clear();	
 	gA_SaveFrames[client].Clear();	
 }	
@@ -1017,11 +1019,11 @@ void InitializePlayerSettings(int client)
 	g_bTASMode[client]           = false;	
 	
 	int style = Shavit_GetBhopStyle(client);	
-	doStyleCheck(client, style, style);	
+	doStyleCheck(client, style, style, true);	
 	
 }	
 
-public void doStyleCheck(int client, int newstyle, int oldstyle) {	
+public void doStyleCheck(int client, int newstyle, int oldstyle, bool login) {	
 	
 	char sSpecial[128];	
 	Shavit_GetStyleStrings(newstyle, sSpecialString, sSpecial, 128);	
@@ -1032,8 +1034,10 @@ public void doStyleCheck(int client, int newstyle, int oldstyle) {
 		OpenTASMenu(client);	
 	} else 	
 	{	
-		g_bTASMode[client] = false;	
-		ExitTASMode(client);
+		if(!login) {
+			g_bTASMode[client] = false;	
+			ExitTASMode(client);
+		}
 	}	
 }	
 
