@@ -513,7 +513,7 @@ public void SQL_WR_Callback(Database db, DBResultSet results, const char[] error
 		char sNoRecords[64];
 		FormatEx(sNoRecords, 64, "%T", "WRMapNoRecords", client);
 		
-		hMenu.AddItem("-1", sNoRecords);
+		hMenu.AddItem("-1", sNoRecords, ITEMDRAW_DISABLED);
 	}
 	
 	else
