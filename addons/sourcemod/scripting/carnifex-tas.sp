@@ -583,7 +583,7 @@ void StartReplay(int client, int clientID, int track)
 		PrintToServer("LOADING: %s", realPath);
 		
 		Shavit_ReloadReplay(GetTasStyle(), track, true, realPath);
-		Shavit_StartReplay(client, GetTasStyle(), track);
+		Shavit_StartReplay(GetTasStyle(), track, 0.0, client);
 		
 		ChangeClientTeam(client, CS_TEAM_SPECTATOR);
 	} else {
@@ -796,7 +796,7 @@ public void Shavit_OnTimeIncrementPost(int client, float time, stylesettings_t s
 
 public void Shavit_OnLeaveZone(int client, int type, int track, int id, int entity, int data) 	
 {	
-	if(type == Zone_Start)	
+	if(type == Zone_Start && g_bTASMode[client])
 	{	
 		if(!g_bResetOnStart[client]) 
 		{
@@ -1040,8 +1040,6 @@ public void doStyleCheck(int client, int newstyle, int oldstyle, bool login) {
 		}
 	}	
 }	
-
-
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])	
 {	
