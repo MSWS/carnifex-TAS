@@ -1,6 +1,6 @@
 /*
- * shavit's Timer - .inc file
- * by: shavit, rtldg
+ * shavit's Timer - misc.inc file
+ * by: EvanIMK, rtldg
  *
  * This file is part of shavit's Timer (https://github.com/shavitush/bhoptimer)
  *
@@ -19,22 +19,33 @@
  *
  */
 
-#if defined _shavit_included
+#if defined _shavit_misc_included
 	#endinput
 #endif
-#define _shavit_included
+#define _shavit_misc_included
 
-// compat giga include file
+/**
+ * Checks if a player is hiding players
+ *
+ * @param client                    Client index.
+ * @return                          Boolean value.
+ */
+native bool Shavit_IsClientUsingHide(int client);
 
-#include <shavit/core>
-#include <shavit/chat>
-#include <shavit/checkpoints>
-#include <shavit/hud>
-#include <shavit/mapchooser>
-#include <shavit/rankings>
-#include <shavit/replay-playback>
-#include <shavit/replay-recorder>
-#include <shavit/wr>
-#include <shavit/zones>
+public SharedPlugin __pl_shavit_misc =
+{
+	name = "shavit-misc",
+	file = "shavit-misc.smx",
+#if defined REQUIRE_PLUGIN
+	required = 1
+#else
+	required = 0
+#endif
+};
 
-// new plugins (like tas) have been excluded since you should now `#include <shavit/tas>` yourself
+#if !defined REQUIRE_PLUGIN
+public void __pl_shavit_misc_SetNTVOptional()
+{
+	MarkNativeAsOptional("Shavit_IsClientUsingHide");
+}
+#endif

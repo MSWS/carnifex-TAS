@@ -8,8 +8,8 @@
 #include <sdktools>	
 #include <sdkhooks>	
 #include <shavit>	
-#include <smlib/entities>	
-#include <smlib/arrays>	
+// #include <smlib/entities>	
+// #include <smlib/arrays>	
 #include <cstrike>
 #pragma dynamic 2621440	
 
@@ -702,13 +702,13 @@ void ToggleAutoStrafer(int client) {
 void RecordFrame(int client, int buttons)	
 {	
 	float vPos[3];	
-	Entity_GetAbsOrigin(client, vPos);	
+	GetClientAbsOrigin(client);
 	
 	float vAng[3];	
 	GetClientEyeAngles(client, vAng);	
 	
 	float vVel[3];	
-	Entity_GetAbsVelocity(client, vVel);	
+	GetEntPropVector(client, Prop_Data, "m_vecVelocity", vVel);
 	
 	timer_snapshot_t snapshot;	
 	Shavit_SaveSnapshot(client, snapshot);	
@@ -782,7 +782,7 @@ stock void TeleportToFrame(int client, bool useVelocity = false, int buttons = 0
 	TeleportEntity(client, vPos, vAng, vVel);	
 }	
 
-public void Shavit_OnTimeIncrementPost(int client, float time, stylesettings_t stylesettings)	
+public void Shavit_OnTimeIncrementPost(int client, float time)	
 {	
 		//g_hFrameList[client].Clear();	
 	
@@ -1139,14 +1139,14 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				if(GetEntityFlags(client) & FL_BASEVELOCITY)	
 				{	
 					float vBaseVel[3];	
-					Entity_GetBaseVelocity(client, vBaseVel);	
+					GetEntPropVector(client, Prop_Data, "m_vecBaseVelocity", vBaseVel);
 					
 					if(vBaseVel[2] > 0)	
 					{	
 						vBaseVel[2] *= 1.0 / GetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue");	
 					}	
 					
-					Entity_SetBaseVelocity(client, vBaseVel);	
+					SetEntPropVector(client, Prop_Data, "m_vecBaseVelocity", vBaseVel);
 				}	
 				
 				
