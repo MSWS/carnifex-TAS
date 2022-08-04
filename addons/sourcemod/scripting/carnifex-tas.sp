@@ -777,7 +777,7 @@ stock void TeleportToFrame(int client, bool useVelocity = false, int buttons = 0
 	snapshot.iStrafes = data[12];	
 	
 	Shavit_SetReplayData(client, gA_SaveFrames[client]);	
-	Shavit_LoadSnapshot(client, snapshot);	
+	Shavit_LoadSnapshot(client, snapshot, sizeof(snapshot));	
 	
 	TeleportEntity(client, vPos, vAng, vVel);	
 }	
@@ -875,7 +875,7 @@ void PauseTAS(int client)
 			
 			
 			
-			Shavit_LoadSnapshot(client, snapshot);	
+			Shavit_LoadSnapshot(client, snapshot, sizeof(snapshot));	
 			
 			g_bDucking[client] = false;	
 			Shavit_ResumeTimer(client);	
