@@ -583,7 +583,7 @@ void StartReplay(int client, int clientID, int track)
 		PrintToServer("LOADING: %s", realPath);
 		
 		Shavit_ReloadReplay(GetTasStyle(), track, true, realPath);
-		Shavit_StartReplay(GetTasStyle(), track, 0.0, client);
+		Shavit_StartReplay(GetTasStyle(), track, 0.0, client, -1, -1, true);
 		
 		ChangeClientTeam(client, CS_TEAM_SPECTATOR);
 	} else {
@@ -702,7 +702,7 @@ void ToggleAutoStrafer(int client) {
 void RecordFrame(int client, int buttons)	
 {	
 	float vPos[3];	
-	GetClientAbsOrigin(client);
+	GetClientAbsOrigin(client, vPos);
 	
 	float vAng[3];	
 	GetClientEyeAngles(client, vAng);	
