@@ -710,8 +710,8 @@ void RecordFrame(int client, int buttons)
 	float vVel[3];	
 	GetEntPropVector(client, Prop_Data, "m_vecVelocity", vVel);
 	
-	timer_snapshot_t snapshot;	
-	Shavit_SaveSnapshot(client, snapshot);	
+	timer_snapshot_t snapshot;
+	Shavit_SaveSnapshot(client, snapshot, sizeof(snapshot));
 	
 	any data[FRAMESIZE];	
 	data[0]  = vPos[0];	
@@ -769,7 +769,7 @@ stock void TeleportToFrame(int client, bool useVelocity = false, int buttons = 0
 	}	
 	
 	timer_snapshot_t snapshot;	
-	Shavit_SaveSnapshot(client, snapshot);	
+	Shavit_SaveSnapshot(client, snapshot, sizeof(snapshot));	
 	
 	snapshot.fCurrentTime     = view_as<float>(data[9]);	
 	snapshot.iGoodGains       = data[10];	
@@ -866,7 +866,7 @@ void PauseTAS(int client)
 			
 			
 			timer_snapshot_t snapshot;	
-			Shavit_SaveSnapshot(client, snapshot);	
+			Shavit_SaveSnapshot(client, snapshot, sizeof(snapshot));	
 			
 			snapshot.fCurrentTime     = view_as<float>(data[9]);	
 			snapshot.iGoodGains       = data[10];	
